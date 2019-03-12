@@ -12,3 +12,117 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+.slogan {
+  text-transform: uppercase;
+}
+
+.profile-content {
+  .alert{
+    display: block;
+    &.hidden {
+      display: none;
+    }
+
+  }
+  .profile-img {
+    max-width: 300px;
+    height: auto;
+    margin: 50px auto 25px;
+    display: block;
+  }
+  h2{
+    text-align: center;
+  }
+
+  .profile-pic {
+    padding-bottom: 50px;
+  }
+
+  #submit-user-details {
+    display: block;
+    &.hide {
+      display: none;
+    }
+  }
+
+  .settings {
+    position: relative;
+    width: 100%;
+    button {
+      width: 200px;
+      position: absolute;
+      left: 50%;
+      bottom: -50px;
+      background-color: #ededed;
+      border-radius: 0;
+      border: 0;
+      font-size: 16px;
+      &#edit-user{
+        margin-left: -200px;
+        border-right: 1px solid #ccc;
+      }
+      &#change-user-password{
+      }
+
+      &.edit{
+        background-color: #fff !important;
+      }
+
+      &:focus{
+        border: 0;
+        box-shadow: none;
+        background-color: #ededed;
+      }
+
+      &:hover{
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+.card-friend {
+  margin-bottom: 20px;
+}
+
+.friends-sidebar {
+  border-right: 1px solid #ccc !important;
+}
+
+
+.dropdown-menu {
+  hr{
+    margin: 0.5rem 0;
+  }
+}
+
+#user-data{
+  .form-group{
+    td{
+      padding: 0;
+    }
+    input {
+      display: none;
+      &.edit{
+        display: block;
+      }
+    }
+    label{
+      display: block;
+      &.hide{
+        display: none;
+      }
+    }
+
+  }
+  .password-section {
+    display: none;
+    &.edit{
+      display: block;
+    }
+  }
+}
+
+
+

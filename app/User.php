@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -41,16 +44,31 @@ class User extends Authenticatable
 
     public function friends()
     {
-        $friends = $this->belongsToMany('App\User', 'user_friends', 'user_id', 'friend_id');
-        return $friends;
+        return $this->belongsToMany(User::class, 'user_friends', 'user_id', 'friend_id');
     }
 
-    public function addFriend($friend_id)
+    public function acceptFriend($friend_id)
     {
         // Adds the friend and then also goes and adds this user to its friend's, friends list.
-        $this->friends()->attach($friend_id);   
-        $friend = User::find($friend_id);       
-        $friend->friends()->attach($this->id);  
+        $alreadyFriends = DB::table("user_friends")->where('user_id',$this->id)->where('friend_id',$friend_id)->exists();
+        if(!$alreadyFriends){
+            $this->friends()->attach($friend_id);
+            $friend = User::find($friend_id);
+            $friend->friends()->attach($this->id);
+        }
+
+        DB::table("friend_invitation")->where('user_id',$friend_id)->where('friend_id',$this->id)->delete();
+    }
+
+    public function addFriend($friend_id) {
+        $userId = Auth::user()->id;
+        $record = DB::table("friend_invitation")->where("user_id",$userId)->where("friend_id",$friend_id);
+        if(!$record->exists()){
+            DB::table("friend_invitation")->insert([
+                "user_id" => $userId,
+                "friend_id" => $friend_id
+            ]);
+        }
     }
 
     public function removeFriend($friend_id)
@@ -59,5 +77,19 @@ class User extends Authenticatable
         $this->friends()->detach($friend_id);   
         $friend = User::find($friend_id);       
         $friend->friends()->detach($this->id);  
+    }
+
+    public static function getAllUsersExcludingFriends($userId){
+        return User::fromQuery(
+            DB::raw("SELECT * FROM users WHERE id <> :user_id AND id NOT IN (SELECT friend_id FROM user_friends WHERE user_id = :id)"),
+            array("user_id"=>$userId,"id"=>$userId)
+        );
+    }
+
+    public static function getAllUserInvitations($userId){
+        return User::fromQuery(
+            DB::raw("SELECT * FROM users WHERE id IN (SELECT user_id FROM friend_invitation WHERE friend_id = :id)")
+            ,array("id"=>$userId)
+        );
     }
 }

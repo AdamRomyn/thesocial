@@ -47,7 +47,8 @@
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        <strong>The password must have at least 1 uppercase character, 1 lowercase character, 1
+special character,1 number and must be at least 6 characters long.</strong>
                                     </span>
                                 @endif
                             </div>

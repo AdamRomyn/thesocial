@@ -10,6 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -55,11 +56,19 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('profile',["userId" => Auth::user()->id]) }}">
+                                        {{ __('Profile') }}
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('friends') }}">
+                                        {{ __('Friends') }}
+                                    </a>
+                                    <hr/>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
+
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
@@ -76,5 +85,6 @@
             @yield('content')
         </main>
     </div>
+    @yield('page-script')
 </body>
 </html>
